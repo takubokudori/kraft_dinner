@@ -2,6 +2,7 @@ pub use ntapi::ntdbg::DbgPrintEx;
 pub const DPFLTR_IHVDRIVER_ID: u32 = 77;
 pub const DPFLTR_ERROR_LEVEL: u32 = 0;
 
+/// DbgPrintExのラッパーマクロ
 #[macro_export]
 macro_rules! log {
     ($string: expr) => {

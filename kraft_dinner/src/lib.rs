@@ -9,6 +9,12 @@ use winapi::um::winnt::{
     IMAGE_DOS_HEADER, IMAGE_DOS_SIGNATURE, IMAGE_NT_HEADERS64, IMAGE_SECTION_HEADER,
 };
 
+// これらはuseしなくてもビルドできる
+use ntapi::winapi::{
+    shared::minwindef::{PULONG, ULONG},
+    um::winnt::{HANDLE, PCWSTR, PLARGE_INTEGER, PVOID, PWSTR, WCHAR},
+};
+
 pub mod log;
 
 // Looks like core:: needs this.
@@ -42,7 +48,10 @@ extern "cdecl" {
     pub fn _snwprintf(Dest: PWSTR, Count: usize, Format: PCWSTR, ...) -> i32;
 }
 
-// Rust DriverEntry
+/// DriverEntry
+///
+/// .cargo/config ファイルで `"-C", "link-arg=/ENTRY:driver_entry",`
+/// と書くことで エントリーポイントの関数名をdriver_entryに変えている。
 #[no_mangle]
 pub extern "system" fn driver_entry() -> NTSTATUS {
     // Break into a debugger with a debug build.

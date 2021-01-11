@@ -30,3 +30,16 @@ Here are primary changes from the his/her work
 - removed dependency on forked, unmaintained `winapi`, and used `ntapi` instead
 - removed some non-essential dependencies, or switched to more popular alternative
 - switched to `DbgPrintEx` from `DbgPrint` for `!log` implementation
+
+# メモ
+
+```
+cargo install cargo-make
+rustup override set nightly-2020-12-24
+```
+
+`cargo make sign` で `target/x86_64-pc-windows-msvc/debug/kraft_dinner.sys` が作成される。
+
+`cargo make sign --profile production` で `target/x86_64-pc-windows-msvc/release/kraft_dinner.sys` が作成される。
+
+`cargo build --release` だけの場合はsysファイルまで作成されない。
