@@ -4,7 +4,6 @@
 
 use core::panic::PanicInfo;
 use ntapi::{ntdbg::*, ntioapi::*, ntrtl::*, ntzwapi::*, winapi::shared::ntdef::*};
-use utf16_lit::utf16_null;
 use winapi::um::winnt::{
     IMAGE_DOS_HEADER, IMAGE_DOS_SIGNATURE, IMAGE_NT_HEADERS64, IMAGE_SECTION_HEADER,
 };
@@ -14,6 +13,7 @@ use ntapi::winapi::{
     shared::minwindef::{PULONG, ULONG},
     um::winnt::{HANDLE, PCWSTR, PLARGE_INTEGER, PVOID, PWSTR, WCHAR},
 };
+use windy::{macros::wstr, WStr};
 
 pub mod log;
 
@@ -135,9 +135,9 @@ fn dump_pages(base_address: u64, page_count: u32) {
         }
     }
 
-    const FORMAT_STRING: &[u16] = utf16_null!("\\SystemRoot\\%016llx.bin");
+    let FORMAT_STRING: &WStr = wstr!("\\SystemRoot\\%016llx.bin");
     let mut buffer: [WCHAR; 33] = [0; 33];
-    if unsafe { _snwprintf(&mut buffer[0], 33, &FORMAT_STRING[0], base_address) } == -1 {
+    if unsafe { _snwprintf(&mut buffer[0], 33, FORMAT_STRING.as_ptr(), base_address) } == -1 {
         return;
     }
 
@@ -227,6 +227,7 @@ pub struct HAL_RUNTIME_SERVICES_BLOCK_INFORMATION {
     pub ServicesBlock: PVOID,
     pub BlockSizeInBytes: usize,
 }
+
 impl Default for HAL_RUNTIME_SERVICES_BLOCK_INFORMATION {
     fn default() -> HAL_RUNTIME_SERVICES_BLOCK_INFORMATION {
         HAL_RUNTIME_SERVICES_BLOCK_INFORMATION {
@@ -253,6 +254,7 @@ pub struct HAL_RUNTIME_SERVICES_BLOCK {
 pub struct HalEfiRuntimeServicesBlock {
     pub address: *mut HAL_RUNTIME_SERVICES_BLOCK,
 }
+
 impl HalEfiRuntimeServicesBlock {
     pub fn find() -> Option<Self> {
         // Try HalQuerySystemInformation first.

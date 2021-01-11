@@ -10,7 +10,8 @@ path = "src/lib.rs"
 crate-type = ["cdylib"]
 
 [dependencies]
-utf16_lit = "1.0.1"
+windy = { git = "https://github.com/takubokudori/windy", features = ["no_std", "macros"], branch = "main" }
+#windy = { version = "0.1.3", features = ["no_std", "macros"] } # error
 
 [dependencies.ntapi]
 version = "0.3.6"
